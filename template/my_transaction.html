@@ -84,7 +84,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for tx in my_transaction %}
+        {% for tx in transactions %}
         <tr>
           <td>{{ tx.date|date:"d-m-Y H:i" }}</td>
           <td>{{ tx.transaction_type }}</td>
