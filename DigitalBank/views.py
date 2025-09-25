@@ -293,8 +293,13 @@ def bank_dashboard(request):
 
 def mask_account_mobile(account_no, mobile):
     masked_acc = f"{'*'*6}{account_no[-4:]}"  # first 6 hidden
-    masked_mobile = f"{mobile[:5]}{'*'*5}"
+    masked_mobile = f"{mobile[:5]}{'*'*5}"     # last 5 hidden
     return masked_acc, masked_mobile
+
+def mask_transfer_account(account_no):
+    if account_no and len(account_no) > 4:
+        return f"{'*'*6}{account_no[-4:]}"
+    return account_no or "-"
 
 def download_transactions_pdf(request, customer_id):
     customer = get_object_or_404(Customer, pk=customer_id)
@@ -315,13 +320,14 @@ def download_transactions_pdf(request, customer_id):
 
     data = [["Date", "Type", "Amount", "Balance Before", "Balance After", "Transfer Account"]]
     for txn in transactions:
+        masked_transfer = mask_transfer_account(txn.transfer_account)
         data.append([
             txn.date.strftime("%d-%m-%Y %H:%M"),
             txn.transaction_type,
             f"₹ {txn.amount}",
             f"₹ {txn.balance_before}",
             f"₹ {txn.balance_after}",
-            txn.transfer_account or "-"
+            masked_transfer
         ])
 
     table = Table(data, hAlign="CENTER")
@@ -340,6 +346,7 @@ def download_transactions_pdf(request, customer_id):
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename=transactions_{customer.customer_id}.pdf'
     return response
+
 
 
 # ----------- CUSTOMER LOGIN & DASHBOARD -----------
