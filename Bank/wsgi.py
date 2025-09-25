@@ -8,9 +8,13 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/wsgi/
 """
 
 import os
-
+import sys
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Bank.settings')
+# Add your project path
+path = '/home/jayabalaji1011/Bank'
+if path not in sys.path:
+    sys.path.append(path)
 
+os.environ['DJANGO_SETTINGS_MODULE'] = 'Bank.settings'
 application = get_wsgi_application()
