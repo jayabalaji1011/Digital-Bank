@@ -23,7 +23,6 @@ A web-based banking system designed to manage customers, transactions, and bank 
 - Only staff can access customer details and perform transactions.
 - Session-based staff authentication.
 
----
 
 ## Models
 
@@ -32,16 +31,14 @@ A web-based banking system designed to manage customers, transactions, and bank 
 - **Transaction**: Records deposits, withdrawals, and transfers.
 - **BankTransaction**: Logs bank-level transactions for tracking.
 
----
-
+ 
 ## Technologies Used
 
 - **Backend:** Django, Python
 - **Frontend:** HTML, CSS, Bootstrap, Javascript
 - **Database:** SQLite (default for Django)
-- **Version Control:** Git & GitHub
 
----
+
 
 ## Installation
 
