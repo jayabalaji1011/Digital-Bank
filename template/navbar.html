@@ -1,0 +1,133 @@
+{% load static %}
+{% block content %}
+{% block extra_css %}
+<style>
+    /* Navbar professional + compact style */
+    .navbar {
+        background: linear-gradient(to right, black, green);
+        padding: 0.3rem 1rem;
+        margin-bottom: 90px;
+    }
+
+    .navbar-brand,
+    .navbar-nav .nav-link {
+        color: #fff !important;
+        font-weight: 500;
+    }
+
+    .navbar-brand:hover {
+        color: orange !important;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .navbar-brand img {
+        height: 40px;
+        width: auto;
+    }
+
+    .navbar-brand span {
+        font-size: 1.2rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    /* User block styling */
+    .user-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff !important;
+        text-align: center;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .user-block:hover {
+        color: orange !important;
+    }
+
+    .user-icon {
+        font-size: 1.5rem;
+        margin-right: 5px;
+    }
+
+    .user-text {
+        font-size: 0.9rem;
+        line-height: 1;
+    }
+
+    /* Adjust popover buttons */
+    .popover .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .popover .btn:last-child {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock extra_css %}
+
+<nav class="navbar fixed-top shadow-sm">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <!-- Left: Logo + Name -->
+        <a class="navbar-brand" href="{% url 'customer_dashboard' %}">
+            <img src="" alt="">
+            <span>Digital Bank</span>
+        </a>
+
+        <!-- Right: User -->
+        <ul class="navbar-nav flex-row align-items-center mb-0">
+            {% if request.session.customer_id %}
+            <li class="nav-item">
+                <div class="user-block" id="userPopover" data-bs-toggle="popover" data-bs-html="true" data-bs-content="
+                     <a href='{% url 'my_transaction' %}' class='btn btn-primary btn-sm w-100 mb-2'>My Transaction</a>
+                     <a href='{% url 'logout_customer' %}' class='btn btn-danger btn-sm w-100'>Logout</a>
+                     ">
+                    <i class="bi bi-person-circle user-icon"></i>
+                    <span class="user-text">{{ request.session.customer_name }}</span>
+                </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a href="{% url 'customer_login' %}" class="nav-link user-block">
+                    <i class="bi bi-person-circle user-icon"></i>
+                    <span class="user-text">Login</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+
+<script>
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var popoverTrigger = document.getElementById('userPopover');
+        if (popoverTrigger) {
+            var popover = new bootstrap.Popover(popoverTrigger, {
+                placement: 'bottom',
+                trigger: 'click',
+                sanitize: false
+            });
+
+            // Close popover when clicking outside
+            document.addEventListener('click', function (e) {
+                if (popoverTrigger && !popoverTrigger.contains(e.target) && !document.querySelector('.popover')?.contains(e.target)) {
+                    popover.hide();
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,104 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+{% block extra_css %}
+<style>
+  .section-title {
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 0.4rem;
+  }
+
+
+  .container {
+    margin-top: 10%;
+    max-width: 1000px;
+  }
+
+  .section-title {
+      font-size: 2rem;
+    }
+
+    .section-title .btn {
+      font-size: 1.1rem;
+      padding: 4px 8px;
+    }
+
+
+  @media (max-width: 1025px) {
+
+    .container {
+      margin-top: 15%;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .section-title .btn {
+      font-size: 1rem;
+      padding: 4px 8px;
+    }
+
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 576px) {
+
+    .container {
+      margin-top: 30%;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+    }
+
+    .section-title .btn {
+      font-size: 0.7rem;
+      padding: 4px 8px;
+    }
+  }
+</style>
+
+{% endblock extra_css %}
+
+<!-- Transactions -->
+<div class="container">
+  <div class="section-title d-flex justify-content-between align-items-center flex-wrap">
+    <span>Transaction History</span>
+    <a href="{% url 'download_transactions_pdf' customer.customer_id %}" class="btn btn-primary btn-sm mt-2 mt-sm-0">
+      <i class="bi bi-download"></i> Download
+    </a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Date/Time</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Balance Before</th>
+          <th>Balance After</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tx in my_transaction %}
+        <tr>
+          <td>{{ tx.date|date:"d-m-Y H:i" }}</td>
+          <td>{{ tx.transaction_type }}</td>
+          <td>₹ {{ tx.amount }}</td>
+          <td>₹ {{ tx.balance_before }}</td>
+          <td>₹ {{ tx.balance_after }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center">No transactions found</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

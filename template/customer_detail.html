@@ -1,0 +1,336 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+{% block extra_css %}
+<style>
+ .readonly-input {
+    background-color: #e9ecef;
+    pointer-events: none;
+  }
+
+  .container {
+    margin-top: 3%;
+    max-width: 1000px;
+  }
+
+  .field-label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+
+    @media (max-width: 1025px) {
+
+    .container {
+    margin-top: 6%;
+    }
+
+    .edit-btn {
+    float: right;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  }
+
+  @media (max-width: 576px) {
+
+    .container {
+    margin-top: 20%;
+    }
+
+    .table th, .table td {
+      font-size: 0.9rem;
+    }
+    .btn-stack {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .cus{
+      font-size: large;
+    }
+
+    .edit-btn {
+    float: right;
+    cursor: pointer;
+    margin-top: -4px !important;
+  }
+  }
+  .edit-btn {
+    float: right;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+
+   .form-message-container {
+        position: fixed;
+        top: 95%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1050;
+        width: auto;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    .form-message {
+        padding: 7px 10px;
+        border-radius: 8px;
+        font-weight: 500;
+        color: #fff;
+        opacity: 1;
+        transition: opacity 0.5s;
+    }
+
+    .form-message.success {
+        background-color: #28a745;
+    }
+
+    .form-message.error {
+        background-color: #dc3545;
+    }
+</style>
+{% endblock extra_css %}
+
+<div class="container py-3">
+  <h2 class="mb-4 cus">
+    Customer & Bank Details
+    <button id="editBtn" class="btn btn-sm btn-primary edit-btn">
+      <i class="bi bi-pencil"></i> Edit
+    </button>
+  </h2>
+
+  <form method="POST" class="d-flex justify-content-center">
+    {% csrf_token %}
+      <!-- Message popup -->
+       <div class="form-message-container">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="form-message {% if message.tags == 'success' %}success{% else %}error{% endif %}">
+              {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+     
+    <div class="row g-3">
+      <!-- Editable: Name -->
+      <div class="col-12 col-md-6">
+        <label class="field-label">Name:</label>
+        <input type="text" name="name" class="form-control readonly-input" 
+               value="{{ customer.name }}">
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="field-label">Balance:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.balance }}" readonly>
+      </div>
+
+      <!-- Account Number (readonly) -->
+      <div class="col-12 col-md-6">
+        <label class="field-label">Account Number:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.account_no }}" readonly>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="field-label">Aadhar:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.aadhar }}" readonly>
+      </div>
+
+      <!-- Editable: Mobile -->
+      <div class="col-12 col-md-6">
+        <label class="field-label">Mobile:</label>
+        <input type="text" name="mobile" class="form-control readonly-input" 
+               value="{{ customer.mobile }}">
+      </div>
+
+      <!-- DOB (readonly) -->
+      <div class="col-12 col-md-6">
+        <label class="field-label">Date of Birth:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.dob }}" readonly>
+      </div>
+
+      <!-- Editable: Address -->
+      <div class="col-12 col-md-6">
+        <label class="field-label">Address:</label>
+        <textarea name="address" class="form-control readonly-input">{{ customer.address }}</textarea>
+      </div>
+
+      <!-- Editable: Password -->
+      <div class="col-12 col-md-6">
+        <label class="field-label">Password:</label>
+        <input type="password" name="password" class="form-control readonly-input" 
+               value="******">
+      </div>
+
+
+      <!-- Bank Info (readonly) -->
+      {% if customer.bank %}
+      
+      <div class="col-12 col-md-6">
+        <label class="field-label">Bank Name:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.bank.name }}" readonly>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="field-label">Branch:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.bank.branch }}" readonly>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="field-label">IFSC:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.bank.ifsc }}" readonly>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="field-label">State:</label>
+        <input type="text" class="form-control readonly-input" 
+               value="{{ customer.bank.state }}" readonly>
+      </div>
+
+      {% endif %}
+
+       <!-- Save Button -->
+    <div id="saveSection" class="mt-3" style="display:none;">
+      <button type="submit" class="btn btn-success">Save Changes</button>
+      <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+    </div>
+    </div>
+</form>
+
+  <!-- Transaction Buttons -->
+  <div class="mt-3 d-flex flex-column flex-sm-row gap-2">
+    <button class="btn btn-primary btn-stack" data-bs-toggle="modal" data-bs-target="#transactionModal">Create Transaction</button>
+    <button class="btn btn-secondary btn-stack" type="button" data-bs-toggle="collapse" data-bs-target="#transactionHistory">View Transactions</button>
+  </div>
+
+<!-- Transaction Modal -->
+<div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="transactionModalLabel">Create Transaction</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Transaction Type -->
+          <div class="mb-3">
+            <label for="id_transaction_type" class="form-label">Transaction Type</label>
+            {{ form.transaction_type }}
+          </div>
+
+          <!-- Amount -->
+          <div class="mb-3">
+            <label for="id_amount" class="form-label">Amount:</label>
+            {{ form.amount }}
+          </div>
+
+          <!-- Receiver Account (hidden initially) -->
+          <div class="mb-3 transfer-fields" style="display: none;">
+            <label for="id_receiver_account" class="form-label">Receiver Account No:</label>
+            {{ form.transfer_account }}
+          </div>
+        </div>
+
+        <div class="modal-footer d-flex flex-column flex-sm-row gap-2">
+          <button type="submit" class="btn btn-success w-100 w-sm-auto">Submit</button>
+          <button type="button" class="btn btn-secondary w-100 w-sm-auto" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Transaction History -->
+  <div class="collapse mt-4" id="transactionHistory">
+    <h4>Transaction History</h4>
+    <div class="table-responsive">
+  <table class="table table-hover table-bordered align-middle text-center">
+    <thead class="table-light">
+      <tr>
+        <th>Date/Time</th>
+        <th>Transfer Account No</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Balance Before</th>
+        <th>Balance After</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tx in transactions %}
+      <tr>
+        <td>{{ tx.date|date:"d-m-Y H:i" }}</td>
+        <td>{{  tx.transfer_account }}</td>
+        <td>{{ tx.transaction_type }}</td>
+        <td>₹ {{ tx.amount }}</td>
+        <td>₹ {{ tx.balance_before }}</td>
+        <td>₹ {{ tx.balance_after }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center">No transactions found</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+  </div>
+</div>
+
+<script>
+  const editBtn = document.getElementById("editBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const inputs = document.querySelectorAll("input[name], textarea[name]");
+  const saveSection = document.getElementById("saveSection");
+
+  editBtn.addEventListener("click", function () {
+    inputs.forEach(el => {
+      if (el.name !== "password" || el.value === "******") {
+        el.classList.remove("readonly-input");
+        el.removeAttribute("readonly");
+      }
+    });
+    saveSection.style.display = "block";
+  });
+
+  cancelBtn.addEventListener("click", function () {
+    window.location.reload();
+  });
+
+   document.addEventListener("DOMContentLoaded", function () {
+    const successMsgs = document.querySelectorAll('.form-message.success');
+    successMsgs.forEach(msg => {
+      setTimeout(() => {
+        msg.style.transition = 'opacity 0.5s';
+        msg.style.opacity = '0';
+        setTimeout(() => { msg.style.display = 'none'; }, 500);
+      }, 2000);
+    });
+  });
+
+    // Show/hide receiver fields based on transaction type
+  const transactionType = document.getElementById("id_transaction_type");
+  const transferFields = document.querySelectorAll(".transfer-fields");
+
+  transactionType.addEventListener("change", function () {
+    if (this.value === "TRANSFER") {
+      transferFields.forEach(el => el.style.display = "block");
+    } else {
+      transferFields.forEach(el => el.style.display = "none");
+      document.getElementById("id_receiver_account").value = "";
+      document.getElementById("id_receiver_ifsc").value = "";
+    }
+  });
+
+</script>
+{% endblock content %}

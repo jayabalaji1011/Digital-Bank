@@ -1,0 +1,102 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+{% block extra_css %}
+<style>
+  .field-label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .readonly-input {
+    background-color: #e9ecef;
+    pointer-events: none;
+  }
+
+  .container {
+    margin-top: 5%;
+    max-width: 1000px;
+  }
+
+
+  @media (max-width: 1025px) {
+
+    .container {
+      margin-top: 8%;
+    }
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 576px) {
+
+ .container {
+      margin-top: 20%;
+    }
+  }
+</style>
+{% endblock extra_css %}
+
+<div class="container">
+  <h2 class="mb-3">My Dashboard</h2>
+
+  <!-- Customer Info -->
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="field-label">Name:</label>
+      <input type="text" class="form-control readonly-input" value="{{ customer.name }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">Balance:</label>
+      <input type="text" class="form-control readonly-input" value="{{ customer.balance }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">Account Number:</label>
+      <input type="text" class="form-control readonly-input" value="{{ customer.account_no }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">Aadhar:</label>
+      <input type="text" class="form-control readonly-input" value="{{ customer.aadhar }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">Mobile:</label>
+      <input type="text" class="form-control readonly-input" value="{{ customer.mobile }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">Date of Birth:</label>
+      <input type="text" class="form-control readonly-input" value="{{ customer.dob }}" readonly>
+    </div>
+    <div class="col-md-12">
+      <label class="field-label">Address:</label>
+      <textarea class="form-control readonly-input" readonly>{{ customer.address }}</textarea>
+    </div>
+
+  </div>
+
+  <!-- Bank Info -->
+  {% if bank %}
+  <section class="mt-3">
+    <h2>Bank Info</h2>
+  </section>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="field-label">Bank Name:</label>
+      <input type="text" class="form-control readonly-input" value="{{ bank.name }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">Branch:</label>
+      <input type="text" class="form-control readonly-input" value="{{ bank.branch }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">IFSC:</label>
+      <input type="text" class="form-control readonly-input" value="{{ bank.ifsc }}" readonly>
+    </div>
+    <div class="col-md-6">
+      <label class="field-label">State:</label>
+      <input type="text" class="form-control readonly-input" value="{{ bank.state }}" readonly>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock content %}

@@ -1,0 +1,106 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+{% block extra_css %}
+<style>
+.container {
+  margin-top: 7%;
+  max-width: 900px; /* optional, makes form centered */
+}
+
+    @media (max-width: 1025px) {
+
+    .container {
+    margin-top: 6%;
+    }
+  }
+
+  @media (max-width: 576px) {
+
+    .container {
+    margin-top: 20%;
+    }
+  }
+
+/* Make textarea smaller */
+textarea.form-control {
+  height: 80px;  
+  resize: none;  
+}
+</style>
+{% endblock extra_css %}
+
+<div class="container">
+  <h2>Create Account</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row g-3">
+
+      <!-- Bank -->
+      <div class="col-md-6">
+        <label class="form-label">Bank</label>
+        {{ form.bank }}
+      </div>
+
+      <!-- Name -->
+      <div class="col-md-6">
+        <label class="form-label">Name</label>
+        {{ form.name }}
+      </div>
+
+      <!-- Mobile -->
+      <div class="col-md-6">
+        <label class="form-label">Mobile</label>
+        {{ form.mobile }}
+      </div>
+
+      <!-- Aadhar -->
+      <div class="col-md-6">
+        <label class="form-label">Aadhar</label>
+        {{ form.aadhar }}
+      </div>
+
+      <!-- DOB -->
+      <div class="col-md-6">
+        <label class="form-label">Date of Birth</label>
+        {{ form.dob }}
+      </div>
+
+      <!-- Account Type -->
+      <div class="col-md-6">
+        <label class="form-label">Account Type</label>
+        {{ form.account_type }}
+      </div>
+
+      <!-- Balance -->
+      <div class="col-md-6">
+        <label class="form-label">Initial Balance</label>
+        {{ form.balance }}
+      </div>
+
+      <!-- Address (full width) -->
+      <div class="col-12">
+        <label class="form-label">Address</label>
+        {{ form.address }}
+      </div>
+
+    </div>
+
+    <button class="btn btn-primary mt-3">Create</button>
+  </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const successMsgs = document.querySelectorAll('.form-message.success');
+    successMsgs.forEach(msg => {
+        setTimeout(() => {
+            msg.style.transition = 'opacity 0.5s';
+            msg.style.opacity = '0';
+            setTimeout(() => { msg.style.display = 'none'; }, 500);
+        }, 2000);
+    });
+});
+</script>
+{% endblock content %}
