@@ -2,21 +2,26 @@
 {% block content %}
 {% block extra_css %}
 <style>
-    /* Navbar professional + compact style */
+    /* Navbar professional + Edulink-style */
     .navbar {
-        background: linear-gradient(to right, black, green);
-        padding: 0.3rem 1rem;
+        background: linear-gradient(to right, #0f2027, #2c5364);
+        padding: 0.2rem 0.2rem;
         margin-bottom: 90px;
     }
 
     .navbar-brand,
     .navbar-nav .nav-link {
         color: #fff !important;
-        font-weight: 500;
+        font-weight: 600;
     }
 
     .navbar-brand:hover {
-        color: orange !important;
+        color: #ff9800 !important;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .hov:hover {
+        color: #ff9800 !important;
         transition: color 0.3s ease-in-out;
     }
 
@@ -26,78 +31,92 @@
         gap: 6px;
     }
 
-    .navbar-brand img {
-        height: 40px;
-        width: auto;
-    }
+   
 
     .navbar-brand span {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         font-weight: bold;
         line-height: 1;
     }
 
-    /* User block styling */
+    /* User block */
     .user-block {
         display: flex;
         align-items: center;
         justify-content: center;
         color: #fff !important;
-        text-align: center;
         font-weight: 500;
         cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 8px;
     }
 
-    .user-block:hover {
-        color: orange !important;
-    }
 
     .user-icon {
-        font-size: 1.5rem;
-        margin-right: 5px;
+        font-size: 1.6rem;
+        margin-right: 6px;
     }
 
     .user-text {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         line-height: 1;
     }
 
-    /* Adjust popover buttons */
-    .popover .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 5px;
+    /* Custom popover menu (Edulink-style) */
+    .custom-popover {
+        position: absolute;
+        top: 60px;
+        right: -9px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        padding: 10px;
+        width: 180px;
+        display: none;
+        z-index: 1050;
     }
 
-    .popover .btn:last-child {
-        margin-bottom: 0;
+    .custom-popover a {
+        display: block;
+        padding: 8px 10px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .custom-popover a:hover {
+        background: #2c5364;
+        color: #fff;
     }
 </style>
 {% endblock extra_css %}
 
 <nav class="navbar fixed-top shadow-sm">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-        <!-- Left: Logo + Name -->
         <a class="navbar-brand" href="{% url 'customer_dashboard' %}">
-            <img src="" alt="">
+            <i class="bi bi-bank"></i>
             <span>Digital Bank</span>
         </a>
 
         <!-- Right: User -->
         <ul class="navbar-nav flex-row align-items-center mb-0">
             {% if request.session.customer_id %}
-            <li class="nav-item">
-                <div class="user-block" id="userPopover" data-bs-toggle="popover" data-bs-html="true" data-bs-content="
-                     <a href='{% url 'my_transaction' %}' class='btn btn-primary btn-sm w-100 mb-2'>My Transaction</a>
-                     <a href='{% url 'logout_customer' %}' class='btn btn-danger btn-sm w-100'>Logout</a>
-                     ">
-                    <i class="bi bi-person-circle user-icon"></i>
+            <li class="nav-item position-relative">
+                <div class="user-block hov" id="userDropdownToggle">
+                    <i class="bi bi-person-circle user-icon "></i>
                     <span class="user-text">{{ request.session.customer_name }}</span>
+                </div>
+
+                <!-- Custom Popover Menu -->
+                <div class="custom-popover" id="userDropdownMenu">
+                    <a href="{% url 'my_transaction' %}">My Transaction</a>
+                    <a href="{% url 'logout_customer' %}" class="text-danger">Logout</a>
                 </div>
             </li>
             {% else %}
             <li class="nav-item">
-                <a href="{% url 'customer_login' %}" class="nav-link user-block">
+                <a href="{% url 'customer_login' %}" class="nav-link user-block hov">
                     <i class="bi bi-person-circle user-icon"></i>
                     <span class="user-text">Login</span>
                 </a>
@@ -107,27 +126,23 @@
     </div>
 </nav>
 
-
 <script>
-
-
     document.addEventListener("DOMContentLoaded", function () {
-        var popoverTrigger = document.getElementById('userPopover');
-        if (popoverTrigger) {
-            var popover = new bootstrap.Popover(popoverTrigger, {
-                placement: 'bottom',
-                trigger: 'click',
-                sanitize: false
+        const toggle = document.getElementById("userDropdownToggle");
+        const menu = document.getElementById("userDropdownMenu");
+
+        if (toggle && menu) {
+            toggle.addEventListener("click", function () {
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
             });
 
-            // Close popover when clicking outside
-            document.addEventListener('click', function (e) {
-                if (popoverTrigger && !popoverTrigger.contains(e.target) && !document.querySelector('.popover')?.contains(e.target)) {
-                    popover.hide();
+            // Close menu when clicking outside
+            document.addEventListener("click", function (e) {
+                if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+                    menu.style.display = "none";
                 }
             });
         }
     });
 </script>
-
 {% endblock content %}

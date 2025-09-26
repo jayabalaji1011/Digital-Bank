@@ -62,8 +62,9 @@
   <table class="table table-hover table-bordered align-middle text-center">
     <thead class="table-light">
       <tr>
-        <th>Date/Time</th>
         <th>Account No</th>
+        <th>Date/Time</th>
+        <th>Tnx Account No</th>
         <th>Type</th>
         <th>Amount</th>
         <th>Balance Before</th>
@@ -73,8 +74,9 @@
     <tbody>
       {% for tx in transactions %}
       <tr>
-        <td>{{ tx.date|date:"d-m-Y H:i" }}</td>
         <td>*****{{ tx.customer.account_no|slice:"-4:" }}</td>
+        <td>{{ tx.date|date:"d-m-Y H:i" }}</td>
+        <td>*****{{ tx.transfer_account|slice:"-4:" }}</td>
         <td>{{ tx.transaction_type }}</td>
         <td>₹ {{ tx.amount }}</td>
         <td>₹ {{ tx.balance_before }}</td>

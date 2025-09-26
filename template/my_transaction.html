@@ -68,7 +68,7 @@
 <div class="container">
   <div class="section-title d-flex justify-content-between align-items-center flex-wrap">
     <span>Transaction History</span>
-    <a href="{% url 'download_transactions_pdf' customer.customer_id %}" class="btn btn-primary btn-sm mt-2 mt-sm-0">
+    <a href="{% url 'download_transactions_pdf' customer.customer_id %}" class="btn btn-primary btn-sm">
       <i class="bi bi-download"></i> Download
     </a>
   </div>
@@ -78,6 +78,7 @@
         <tr>
           <th>Date/Time</th>
           <th>Type</th>
+          <th>Tnx Account No</th>
           <th>Amount</th>
           <th>Balance Before</th>
           <th>Balance After</th>
@@ -88,6 +89,7 @@
         <tr>
           <td>{{ tx.date|date:"d-m-Y H:i" }}</td>
           <td>{{ tx.transaction_type }}</td>
+          <td>*****{{ tx.transfer_account|slice:"-4:" }}</td>
           <td>₹ {{ tx.amount }}</td>
           <td>₹ {{ tx.balance_before }}</td>
           <td>₹ {{ tx.balance_after }}</td>

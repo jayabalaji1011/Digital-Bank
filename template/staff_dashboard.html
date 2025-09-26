@@ -38,6 +38,33 @@
     font-size: 0.8rem;
   }
 }
+ .form-message-container {
+    position: fixed;
+    top: 95%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    width: auto;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  .form-message {
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #fff;
+    opacity: 1;
+    transition: opacity 0.5s;
+  }
+
+  .form-message.success {
+    background-color: #28a745;
+  }
+
+  .form-message.error {
+    background-color: #dc3545;
+  }
 </style>
 
 {% endblock extra_css %}
@@ -57,6 +84,17 @@
         class="form-control"
         value="{{ request.GET.q|default:'' }}"
     >
+       <!-- Message popup -->
+    <div class="form-message-container">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="form-message {% if message.tags == 'success' %}success{% else %}error{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+
   </form>
 
   <!-- Recent Transactions -->
@@ -91,14 +129,23 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+ document.addEventListener("DOMContentLoaded", function () {
     const successMsgs = document.querySelectorAll('.form-message.success');
+    const errorMsgs = document.querySelectorAll('.form-message.error');
     successMsgs.forEach(msg => {
       setTimeout(() => {
         msg.style.transition = 'opacity 0.5s';
         msg.style.opacity = '0';
         setTimeout(() => { msg.style.display = 'none'; }, 500);
       }, 2000);
+    });
+    errorMsgs.forEach(msg => {
+      setTimeout(() => {
+        msg.style.transition = 'opacity 0.5s';
+        msg.style.opacity = '0';
+        setTimeout(() => { msg.style.display = 'none'; }, 500);
+      }, 4000);
+
     });
   });
 </script>

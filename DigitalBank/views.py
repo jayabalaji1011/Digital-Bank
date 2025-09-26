@@ -265,21 +265,13 @@ def customer_detail(request, pk):
     })
 
 
-
-
-
-
 def bank_dashboard(request):
     if 'staff_id' not in request.session:
         return redirect('staff_login')
     bank = Bank.objects.first()
-
     # Recent 10 transactions
     transactions = BankTransaction.objects.all().order_by('-date')[:10]
-
-    # Count of customers for this bank
     customer_count = bank.customer_set.count() if bank else 0
-
     context = {
         'bank': bank,
         'transactions': transactions,
@@ -289,11 +281,11 @@ def bank_dashboard(request):
     return render(request, 'bank.html', context)
 
 
-# ----------- CUSTOMER PDF DOWNLOAD -----------
+# ----------- PRINT TRANSACTIONS & PDF DOWNLOAD -----------
 
 def mask_account_mobile(account_no, mobile):
-    masked_acc = f"{'*'*6}{account_no[-4:]}"  # first 6 hidden
-    masked_mobile = f"{mobile[:5]}{'*'*5}"     # last 5 hidden
+    masked_acc = f"{'*'*6}{account_no[-4:]}" 
+    masked_mobile = f"{mobile[:5]}{'*'*5}"     
     return masked_acc, masked_mobile
 
 def mask_transfer_account(account_no):
@@ -348,7 +340,6 @@ def download_transactions_pdf(request, customer_id):
     return response
 
 
-
 # ----------- CUSTOMER LOGIN & DASHBOARD -----------
 
 def customer_login(request):
@@ -374,13 +365,12 @@ def logout_customer(request):
 
 
 def customer_dashboard(request):
-    """Customer dashboard after login"""
     customer_id = request.session.get('customer_id')
     if not customer_id:
         return redirect('customer_login')
 
     customer = get_object_or_404(Customer, customer_id=customer_id)
-    transactions = Transaction.objects.filter(customer=customer).order_by('-date')
+    transactions = Transaction.objects.filter(customer=customer).order_by('-date')[:3]
 
     return render(request, 'customer_dashboard.html', {
         'customer': customer,
@@ -390,7 +380,6 @@ def customer_dashboard(request):
 
 
 def my_transaction(request):
-    """View all transactions for customer"""
     customer_id = request.session.get('customer_id')
     if not customer_id:
         return redirect('customer_login')
