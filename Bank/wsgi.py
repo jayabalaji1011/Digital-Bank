@@ -16,5 +16,5 @@ path = '/home/jayabalaji2k/DigitalBank'
 if path not in sys.path:
     sys.path.append(path)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'Bank.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'DigitalBank.settings'
 application = get_wsgi_application()
