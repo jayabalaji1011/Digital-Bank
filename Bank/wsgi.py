@@ -10,10 +10,6 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/wsgi/
 import sys
 import os
 
-# add your project folder
-project_home = '/home/jayabalaji2k/Digital-Bank'
-if project_home not in sys.path:
-    sys.path = [project_home] + sys.path
 
 # set the settings module
 os.environ['DJANGO_SETTINGS_MODULE'] = 'Bank.settings'
