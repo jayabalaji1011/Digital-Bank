@@ -12,7 +12,7 @@ import sys
 from django.core.wsgi import get_wsgi_application
 
 # Add your project path
-path = '/home/jayabalaji1011/DigitalBank'
+path = '/home/jayabalaji2k/DigitalBank'
 if path not in sys.path:
     sys.path.append(path)
 
