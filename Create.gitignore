@@ -1,0 +1,23 @@
+# Python cache and compiled files
+*.pyc
+__pycache__/
+
+# Django / database
+*.sqlite3
+db.sqlite3
+*.log
+*.pot
+
+# Environment variables
+.env
+
+# IDE / editor files
+.vscode/
+.idea/
+
+# Media / uploaded files
+media/
+staticfiles/
+
+# OS system files
+.DS_Store
