@@ -40,10 +40,8 @@ A web-based banking system designed to manage customers, transactions, and bank 
 
 
 
-## Installation
 
-1. Clone the repository:
-
-```bash
+## Installation 1. **Clone the repository**
+bash
 git clone https://github.com/jayabalaji1011/Digital-Bank.git
 cd Digital-Bank
